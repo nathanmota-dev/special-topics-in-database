@@ -1,4 +1,6 @@
 import prismaClient from "../database/prismaInstance";
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 interface CreateCostumerProps {
     name: string;
@@ -25,4 +27,36 @@ class CreateCostumerService {
     }
 }
 
-export { CreateCostumerService };
+interface LoginProps {
+    email: string;
+    password: string;
+}
+
+class LoginService {
+    async execute({ email, password }: LoginProps) {
+        // Verifique se o usuário existe
+        const user = await prismaClient.user.findUnique({
+            where: {
+                email,
+            },
+        });
+
+        if (!user) {
+            throw new Error("Usuário não encontrado!");
+        }
+
+        const passwordMatch = await bcrypt.compare(password, user.password);
+
+        if (!passwordMatch) {
+            throw new Error("Senha inválida!");
+        }
+
+        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, {
+            expiresIn: '1d',
+        });
+
+        return { user, token };
+    }
+}
+
+export { CreateCostumerService, LoginService };

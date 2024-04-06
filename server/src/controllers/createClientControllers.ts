@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { CreateCostumerService } from "../services/createClientServices";
+import { CreateCostumerService, LoginService } from "../services/createClientServices";
 
 class CreateCostumerController {
     async handle(req: Request, res: Response) {
@@ -16,4 +16,19 @@ class CreateCostumerController {
     }
 }
 
-export { CreateCostumerController };
+class LoginController {
+    async handle(req: Request, res: Response) {
+        const { email, password } = req.body;
+
+        const loginService = new LoginService();
+
+        try {
+            const result = await loginService.execute({ email, password });
+            res.json(result);
+        } catch (error: any) {
+            res.status(400).json({ error: error.message });
+        }
+    }
+}
+
+export { CreateCostumerController, LoginController };
