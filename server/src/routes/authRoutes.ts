@@ -15,4 +15,8 @@ router.post('/login', (req, res) => {
     return new LoginController().handle(req, res);
 });
 
+router.post('/availability', require('./availabilityRoutes'));
+
+router.post('/reserve', require('./reservationRoutes'));
+
 export default router;
