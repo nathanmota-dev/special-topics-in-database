@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon --watch src --ext ts --exec ts-node src/app.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prisma": "npx prisma"
+    "prisma": "npx prisma generate",
+    "studio": "npx prisma studio"
   },
   "keywords": [],
   "author": "",

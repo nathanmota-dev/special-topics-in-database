@@ -11,6 +11,9 @@ interface CreateCostumerProps {
 class CreateCostumerService {
     async execute(name: string, email: string, password: string): Promise<CreateCostumerProps> {
 
+        const salt = await bcrypt.genSalt();
+        const hashedPassword = await bcrypt.hash(password, salt);
+
         if (!name || !email || !password) {
             throw new Error("Preencha todos os campos!");
         }
@@ -19,7 +22,7 @@ class CreateCostumerService {
             data: {
                 name,
                 email,
-                password,
+                password: hashedPassword,
             }
         });
 
